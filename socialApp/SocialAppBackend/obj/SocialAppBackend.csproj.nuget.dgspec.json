@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj": {}
+    "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj": {
+    "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
+        "projectUniqueName": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
         "projectName": "SocialAppBackend",
-        "projectPath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
+        "projectPath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
         "packagesPath": "C:\\Users\\lewis\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\obj\\",
+        "outputPath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lewis\\AppData\\Roaming\\NuGet\\NuGet.Config"

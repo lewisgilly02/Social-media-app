@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oS8SBVsYIlM=",
+  "dgSpecHash": "xdcHwgGGKUY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
+  "projectFilePath": "C:\\Users\\lewis\\Documents\\coding\\aspnet\\Social-media-app\\socialApp\\SocialAppBackend\\SocialAppBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lewis\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
     "C:\\Users\\lewis\\.nuget\\packages\\microsoft.extensions.apidescription.server\\9.0.0\\microsoft.extensions.apidescription.server.9.0.0.nupkg.sha512",
