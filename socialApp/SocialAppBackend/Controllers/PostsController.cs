@@ -39,6 +39,15 @@ public class PostsController : ControllerBase
         }
     }
 
+    [HttpGet("exception")]
+
+    public void ForceException()
+    {
+        _service.ThrowAnException();
+        
+    }
+
+    
     [HttpPost]
 
     public ActionResult<Post> Add(Post post)

@@ -27,4 +27,10 @@ public class PostsService
     // first or default returns the first match or null
     public Post? GetPostById(int id) =>
     _posts.FirstOrDefault(post => post.Id == id);
+
+
+    public void ThrowAnException()
+    {
+        throw new InvalidOperationException("Testing the global error handler - artificial error ");
+    }
 }
