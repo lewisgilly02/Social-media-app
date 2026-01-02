@@ -1,3 +1,4 @@
+using SocialAppBackend.Data;
 using SocialAppBackend.Models;
 
 namespace SocialAppBackend.Services;
@@ -6,6 +7,12 @@ public class PostsService
 {
     private readonly List<Post> _posts = [];
     
+    private readonly AppDbContext _db;
+
+    public PostsService(AppDbContext db)
+    {
+        _db = db;
+    }
 
     public IEnumerable<Post> GetAll() => _posts;
 

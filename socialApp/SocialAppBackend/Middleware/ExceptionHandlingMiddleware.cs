@@ -22,7 +22,7 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError("something went wrong on a request to {} {}", context.Request.Method, context.Request.Path);
+            _logger.LogError(ex ,"something went wrong on a request to {} {}", context.Request.Method, context.Request.Path);
 
 
             // this checks if the response has been written before - if it has and you proceed can get some weird bugs (not that it would come up here but future proof)

@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using SocialApp.Middleware;
+using SocialAppBackend.Data;
 using SocialAppBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    // for each request create appdbcontext configured to sqlite and inject
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("defaultconnection")
+    )
+);
 
 builder.Services.AddSwaggerGen();
 
