@@ -14,13 +14,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<AppDbContext>(options =>
     // for each request create appdbcontext configured to sqlite and inject
     options.UseSqlite(
-        builder.Configuration.GetConnectionString("defaultconnection")
+        builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<PostsService>();
+builder.Services.AddScoped<PostsService>();
 
 var app = builder.Build();
 
