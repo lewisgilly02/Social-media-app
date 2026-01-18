@@ -21,7 +21,12 @@ public class PostsController : ControllerBase
 
     // get requests
     [HttpGet]
-    public IEnumerable<Post> GetAll() => _service.GetAll();
+
+    public async Task<ActionResult<List<Post>>> GetAll()
+    {
+        var posts = await _service.GetAllAsync();
+        return Ok(posts);
+    }
 
     [HttpGet("{id}")]
     public ActionResult<Post> GetById(int id)

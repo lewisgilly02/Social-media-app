@@ -25,9 +25,7 @@ builder.Services.AddScoped<PostsService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// the pipeline will be executed in order, hence the logger up first.
 
-// app.UseMiddleware<RequestLoggingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

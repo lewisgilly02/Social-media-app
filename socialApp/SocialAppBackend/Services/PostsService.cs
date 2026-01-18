@@ -1,5 +1,6 @@
 using SocialAppBackend.Data;
 using SocialAppBackend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialAppBackend.Services;
 
@@ -14,7 +15,12 @@ public class PostsService
         _db = db;
     }
 
-    public IEnumerable<Post> GetAll() => _posts;
+    public Task<List<Post>> GetAllAsync()
+    // this function didn't work when enclosed with {}, find out why.
+        =>  _db.Posts
+            .OrderByDescending(post => post.CreatedAt)
+            .ToListAsync();
+    
 
     public Post Add(Post post)
     {   
