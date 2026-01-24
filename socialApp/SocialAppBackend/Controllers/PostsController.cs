@@ -28,21 +28,17 @@ public class PostsController : ControllerBase
         return Ok(posts);
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<Post> GetById(int id)
+
+
+    [HttpGet("{id:int}")]
+
+    public async Task<ActionResult<Post>> GetById(int id)
     {
-        _logger.LogInformation($"Get request at /api/posts/(id) received for {id}");
-        var post = _service.GetPostById(id);
-        if (post is null)
-        {
-            _logger.LogWarning($"error post {id} cannot be found");
-            return NotFound();
-        }
-        else
-        {
-            return Ok(post);
-        }
+        var post = await _service.GetByIdAsync(id);
+        return post is null ? NotFound() : Ok(post);
     }
+
+
 
     [HttpGet("exception")]
 
@@ -52,17 +48,42 @@ public class PostsController : ControllerBase
         
     }
 
+
+    // posts
     
     [HttpPost]
 
-    public ActionResult<Post> Add(Post post)
+    public async Task<ActionResult<Post>> Create([FromBody] CreatePostDto dto)
     {
-
-        var created = _service.Add(post);
-        _logger.LogInformation($"post added, index: {_service.GetPostCount()} ");
-        
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        var created = await _service.CreateAsync(dto.Content);
+        return Ok(created);
     }
 
+    //update
+    [HttpPatch]
+
+    public async Task<ActionResult<Post>> Edit(int id, String content)
+    {
+        var updatedPost = await _service.EditPost(id, content);
+
+        if (updatedPost is null) return NotFound();
+
+        return Ok(updatedPost);
+    }
+
+    // delete
+
+    [HttpDelete]
+
+    public async Task<ActionResult<Post>> Delete(int id)
+    {   
+
+        var deleted = await _service.DeletePost(id);
+        if (deleted is null) return NotFound();
+
+        return NoContent();
+        
+        
+    }
 
 }

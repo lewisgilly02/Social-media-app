@@ -6,7 +6,6 @@ namespace SocialAppBackend.Services;
 
 public class PostsService
 {
-    private readonly List<Post> _posts = [];
     
     private readonly AppDbContext _db;
 
@@ -22,25 +21,53 @@ public class PostsService
             .ToListAsync();
     
 
-    public Post Add(Post post)
-    {   
-        // this isnt great as it doesn't consider deleting posts and race conditions but whatever im sure db would handle that anyway so ill leave it
-        post.Id = _posts.Count + 1;
-        post.CreatedAt = DateTime.UtcNow;
-        _posts.Add(post);
-        return post;
-
-    }
-
-    public int GetPostCount()
+    public async Task<Post> CreateAsync(string content)
     {
-        return this._posts.Count;
+        var post = new Post
+        {
+            Content = content,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.Posts.Add(post);
+
+        await _db.SaveChangesAsync();
+
+        return post;
     }
+
 
     // first or default returns the first match or null
-    public Post? GetPostById(int id) =>
-    _posts.FirstOrDefault(post => post.Id == id);
+    public Task<Post?> GetByIdAsync(int id) =>
+    _db.Posts.FindAsync(id).AsTask();
 
+
+
+    public async Task<Post?> DeletePost(int id)
+    {
+        var post = await _db.Posts.FindAsync(id);
+        if (post is null) return null;
+
+        _db.Posts.Remove(post);
+
+        await _db.SaveChangesAsync();
+        
+        return post;
+    }
+
+
+
+    public async Task<Post?> EditPost(int id, String updatedContent)
+    {
+        var post = await _db.Posts.FindAsync(id);
+        if (post is null) return null;
+
+        post.Content = updatedContent;
+
+        await _db.SaveChangesAsync();
+
+        return post;
+    }
 
     public void ThrowAnException()
     {
