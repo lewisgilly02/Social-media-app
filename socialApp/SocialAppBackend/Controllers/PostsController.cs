@@ -60,9 +60,9 @@ public class PostsController : ControllerBase
     }
 
     //update
-    [HttpPatch]
+    [HttpPatch("{id:int}")]
 
-    public async Task<ActionResult<Post>> Edit(int id, String content)
+    public async Task<ActionResult<Post>> Edit(int id, string content)
     {
         var updatedPost = await _service.EditPost(id, content);
 
@@ -72,10 +72,9 @@ public class PostsController : ControllerBase
     }
 
     // delete
+    [HttpDelete("{id:int}")]
 
-    [HttpDelete]
-
-    public async Task<ActionResult<Post>> Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {   
 
         var deleted = await _service.DeletePost(id);
