@@ -1,8 +1,8 @@
-
 using System.ComponentModel.DataAnnotations;
-public class CreatePostDto
-{   
+
+public class EditPostDto
+{
     [Required]
     [MaxLength(280)]
-    public string Content {get; set;} = "";
+    public string content {get; set;} = "";
 }

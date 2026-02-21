@@ -24,6 +24,7 @@ public class PostsController : ControllerBase
 
     public async Task<ActionResult<List<Post>>> GetAll()
     {
+        _logger.LogInformation("post controller: client requested all posts: {}", Request.Path);
         var posts = await _service.GetAllAsync();
         return Ok(posts);
     }
@@ -35,6 +36,7 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<Post>> GetById(int id)
     {
         var post = await _service.GetByIdAsync(id);
+        _logger.LogInformation("post controller: client requested post id: {}, {}", id, Request.Path);
         return post is null ? NotFound() : Ok(post);
     }
 
@@ -56,17 +58,20 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<Post>> Create([FromBody] CreatePostDto dto)
     {
         var created = await _service.CreateAsync(dto.Content);
+        _logger.LogInformation("client created a post");
         return Ok(created);
     }
 
     //update
     [HttpPatch("{id:int}")]
 
-    public async Task<ActionResult<Post>> Edit(int id, string content)
+    public async Task<ActionResult<Post>> Edit(int id, [FromBody] EditPostDto dto)
     {
-        var updatedPost = await _service.EditPost(id, content);
+        var updatedPost = await _service.EditPost(id, dto.content);
 
         if (updatedPost is null) return NotFound();
+
+        _logger.LogInformation("client edited post id: {}", id);
 
         return Ok(updatedPost);
     }
@@ -79,6 +84,7 @@ public class PostsController : ControllerBase
 
         var deleted = await _service.DeletePost(id);
         if (deleted is null) return NotFound();
+        _logger.LogInformation("client deleted post: {}", id);
 
         return NoContent();
         
