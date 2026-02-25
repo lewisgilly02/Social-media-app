@@ -2,18 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SocialAppBackend.Models;
 
-public class Post
+public class Comment
 {
+    
     public int Id { get; set; }
 
-    
-    public string AuthorId { get; set; } = string.Empty;
+    [Required]
+    //fk value
+    public int PostId {get; set;}
 
+    [Required]
+    public Post Post {get; set;} = null!;
 
+    [Required]
+    public int AuthorId { get; set; } 
+
+    [Required]
+    [MaxLength(250)]
     public string Content { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    public List<Comment> Comments {get; set;} = new();
 
 }

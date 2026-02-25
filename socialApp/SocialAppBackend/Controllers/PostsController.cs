@@ -35,7 +35,7 @@ public class PostsController : ControllerBase
 
     public async Task<ActionResult<Post>> GetById(int id)
     {
-        var post = await _service.GetByIdAsync(id);
+        var post = await _service.GetPostByIdAsync(id);
         _logger.LogInformation("post controller: client requested post id: {}, {}", id, Request.Path);
         return post is null ? NotFound() : Ok(post);
     }
@@ -51,14 +51,26 @@ public class PostsController : ControllerBase
     }
 
 
-    // posts
+    // create
     
     [HttpPost]
 
     public async Task<ActionResult<Post>> Create([FromBody] CreatePostDto dto)
     {
-        var created = await _service.CreateAsync(dto.Content);
+        var created = await _service.CreatePostAsync(dto.Content);
         _logger.LogInformation("client created a post");
+        return Ok(created);
+    }
+
+    [HttpPost("{postId:int}/comments")]
+    
+    public async Task<ActionResult<Comment>> CreateComment(int postId, [FromBody] CreateCommentDto dto)
+    {
+        var created = await _service.CreateCommentAsync(postId, dto.AuthorId, dto.Content);
+
+        if (created is null) return NotFound();
+
+        _logger.LogInformation("client has made a comment on a post");
         return Ok(created);
     }
 

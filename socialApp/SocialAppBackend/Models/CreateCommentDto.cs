@@ -1,6 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
-public class CreatePostDto
+public class CreateCommentDto
 {   
     [Required]
     // I have yet to implement auth and i cant be bothered
