@@ -18,7 +18,7 @@ public class CommentResponseDto
 
 
     [Required]
-    public int AuthorId { get; set; } 
+    public string AuthorId { get; set; } = "";
 
     [Required]
     [MaxLength(250)]

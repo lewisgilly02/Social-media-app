@@ -39,7 +39,7 @@ public class PostsService
     }
 
 
-    public async Task<CreateCommentDto?> CreateCommentAsync(int postId, int authorId, string content)
+    public async Task<CreateCommentDto?> CreateCommentAsync(int postId, string authorId, string content)
     {   
 
         var postExists = await _db.Posts

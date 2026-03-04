@@ -15,7 +15,7 @@ public class Comment
     public Post Post {get; set;} = null!;
 
     [Required]
-    public int AuthorId { get; set; } 
+    public string AuthorId { get; set; } = "";
 
     [Required]
     [MaxLength(250)]
