@@ -16,14 +16,8 @@ public class PostsService
         _db = db;
     }
 
-    public Task<List<Post>> GetAllAsync()
-    // this function didn't work when enclosed with {}, find out why.
-        =>  _db.Posts
-            .OrderByDescending(post => post.CreatedAt)
-            .ToListAsync();
-    
 
-    public async Task<Post> CreatePostAsync(string content)
+    public async Task<PostResponseDto> CreatePostAsync(string content)
     {
         var post = new Post
         {
@@ -35,10 +29,17 @@ public class PostsService
 
         await _db.SaveChangesAsync();
 
-        return post;
+        return new PostResponseDto
+        {
+            Id = post.Id,
+            Content = post.Content,
+            CreatedAt = post.CreatedAt,
+            Comments = new()
+        };
     }
 
-    public async Task<Comment> CreateCommentAsync(int postId, int authorId, string content)
+
+    public async Task<Comment?> CreateCommentAsync(int postId, int authorId, string content)
     {   
 
         var postExists = await _db.Posts
@@ -63,8 +64,10 @@ public class PostsService
 
 
     // first or default returns the first match or null
-    public async Task<Post?> GetPostByIdAsync(int id)
-    {
+    public async Task<PostResponseDto?> GetPostByIdAsync(int id)
+    {   
+        // for this, we must map this to a response dto to
+        // omit the "post" field casuing infinite recursion
         var post = await _db.Posts
             .Include(p => p.Comments)
             .FirstOrDefaultAsync(post => post.Id == id);
@@ -74,11 +77,34 @@ public class PostsService
             return null;
         }
 
-        return post;
+        return new PostResponseDto
+        {
+            Id = post.Id,
+            AuthorId = post.AuthorId,
+            Content = post.Content,
+            CreatedAt = post.CreatedAt,
+            Comments = post.Comments.Select(c => new CommentResponseDto
+            {
+                Id = c.Id,
+                PostId = c.PostId,
+                AuthorId = c.AuthorId,
+                Content = c.Content,
+                CreatedAt = c.CreatedAt
+
+            }).ToList()
+                
+            
+        };
     }
 
-
-
+        public Task<List<Post>> GetAllAsync()
+         // this function didn't work when enclosed with {}, find out why.
+         // get all doesnt inlude comments
+        =>  _db.Posts
+            .OrderByDescending(post => post.CreatedAt)
+            .ToListAsync();
+    
+   
     public async Task<Post?> DeletePost(int id)
     {
         var post = await _db.Posts.FindAsync(id);

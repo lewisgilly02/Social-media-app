@@ -19,10 +19,12 @@ public class PostsController : ControllerBase
         _logger = log;
     }
 
-    // get requests
+
+
+    // =========================== GET / READ
     [HttpGet]
 
-    public async Task<ActionResult<List<Post>>> GetAll()
+    public async Task<ActionResult<List<PostSummaryResponseDto>>> GetAll()
     {
         _logger.LogInformation("post controller: client requested all posts: {}", Request.Path);
         var posts = await _service.GetAllAsync();
@@ -51,11 +53,12 @@ public class PostsController : ControllerBase
     }
 
 
-    // create
+
+    // ============================== CREATE
     
     [HttpPost]
 
-    public async Task<ActionResult<Post>> Create([FromBody] CreatePostDto dto)
+    public async Task<ActionResult<CreatePostDto>> CreatePost([FromBody] CreatePostDto dto)
     {
         var created = await _service.CreatePostAsync(dto.Content);
         _logger.LogInformation("client created a post");
@@ -64,7 +67,7 @@ public class PostsController : ControllerBase
 
     [HttpPost("{postId:int}/comments")]
     
-    public async Task<ActionResult<Comment>> CreateComment(int postId, [FromBody] CreateCommentDto dto)
+    public async Task<ActionResult<CreateCommentDto>> CreateComment(int postId, [FromBody] CreateCommentDto dto)
     {
         var created = await _service.CreateCommentAsync(postId, dto.AuthorId, dto.Content);
 
@@ -74,10 +77,11 @@ public class PostsController : ControllerBase
         return Ok(created);
     }
 
-    //update
+
+    //==================================== UDPATE
     [HttpPatch("{id:int}")]
 
-    public async Task<ActionResult<Post>> Edit(int id, [FromBody] EditPostDto dto)
+    public async Task<ActionResult<EditPostDto>> Edit(int id, [FromBody] EditPostDto dto)
     {
         var updatedPost = await _service.EditPost(id, dto.content);
 
@@ -88,7 +92,7 @@ public class PostsController : ControllerBase
         return Ok(updatedPost);
     }
 
-    // delete
+    // ================================== DELETE
     [HttpDelete("{id:int}")]
 
     public async Task<ActionResult> Delete(int id)
