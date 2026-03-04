@@ -39,7 +39,7 @@ public class PostsService
     }
 
 
-    public async Task<Comment?> CreateCommentAsync(int postId, int authorId, string content)
+    public async Task<CreateCommentDto?> CreateCommentAsync(int postId, int authorId, string content)
     {   
 
         var postExists = await _db.Posts
@@ -59,7 +59,12 @@ public class PostsService
 
         await _db.SaveChangesAsync();
         
-        return comment;
+        return new CreateCommentDto
+        {
+            AuthorId = comment.AuthorId,
+
+            Content = comment.Content
+        };
     }
 
 
@@ -97,13 +102,26 @@ public class PostsService
         };
     }
 
-        public Task<List<Post>> GetAllAsync()
+        public Task<List<PostSummaryResponseDto>> GetAllAsync()
+    {
          // this function didn't work when enclosed with {}, find out why.
          // get all doesnt inlude comments
-        =>  _db.Posts
+         var posts = _db.Posts
             .OrderByDescending(post => post.CreatedAt)
-            .ToListAsync();
+            .Select(p => new PostSummaryResponseDto
+            {
+                Id = p.Id,
+                AuthorId = p.AuthorId,
+                Content = p.Content,
+                CreatedAt = p.CreatedAt,
+                Comments = new()
+            }).ToListAsync();
+
+            return posts;
+            
     
+        
+    }
    
     public async Task<Post?> DeletePost(int id)
     {
