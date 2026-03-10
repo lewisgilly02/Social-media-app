@@ -20,6 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<AuthService>();
+
 builder.Services.AddScoped<PostsService>();
 
 var app = builder.Build();

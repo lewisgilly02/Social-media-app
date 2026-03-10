@@ -181,3 +181,4 @@ C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBacke
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\BCrypt.Net-Next.dll

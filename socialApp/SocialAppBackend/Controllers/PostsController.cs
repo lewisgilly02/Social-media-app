@@ -31,7 +31,7 @@ public class PostsController : ControllerBase
         return Ok(posts);
     }
 
-
+    // change to dtos
 
     [HttpGet("{id:int}")]
 
