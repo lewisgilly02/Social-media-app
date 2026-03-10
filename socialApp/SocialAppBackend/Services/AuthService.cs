@@ -1,9 +1,11 @@
 using SocialAppBackend.Data;
 using SocialAppBackend.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.VisualBasic;
 using BCrypt.Net;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SocialAppBackend.Services;
 
@@ -60,8 +62,40 @@ public class AuthService
 
         return new LoginResponseDto
         {
-            
-        }
+            Token = GenerateToken(usernameExists)
+        };
 
     }
+
+    private string GenerateToken(User user)
+    {
+        var claims = new[]
+        {   
+            // JwtRegisteredClaimNames is basiaclly just constants for the claim key
+            // its much safer than typing "sub", user.userid because typos
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserId),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+        };
+
+        // convert secret key string into bytes, then wrap it in a security key object
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes("secretkeyforsecrecywonttellanybody123lookatmeheeheeheesecrecyyoucantseefeeforemekeykeykeylongenoughformeeee")
+        );
+
+        // pair key with the algorithm to use it for signing
+
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: "SocialApp",
+            audience: "SocialApp",
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(15),
+            signingCredentials: credentials
+
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
 }
+
