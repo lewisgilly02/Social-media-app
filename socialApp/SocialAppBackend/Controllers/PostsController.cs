@@ -77,6 +77,19 @@ public class PostsController : ControllerBase
         return Ok(created);
     }
 
+    [HttpPost("{postId:int}/likes")]
+
+    public async Task<ActionResult<LikeResponseDto>> CreateLike(int postId, [FromBody] LikeDto dto)
+    {
+        var liked = await _service.CreateLikeAsync(postId, dto.UserId);
+
+        if (liked is null) return NotFound();
+
+        _logger.LogInformation("user {} just liked post {}", dto.UserId, postId);
+
+        return Ok(liked);
+    }
+
 
     //==================================== UDPATE
     [HttpPatch("{id:int}")]
@@ -93,18 +106,33 @@ public class PostsController : ControllerBase
     }
 
     // ================================== DELETE
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id:int}/posts")]
 
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> DeletePost(int id)
     {   
 
-        var deleted = await _service.DeletePost(id);
+        var deleted = await _service.DeletePostAsync(id);
         if (deleted is null) return NotFound();
         _logger.LogInformation("client deleted post: {}", id);
 
         return NoContent();
         
         
+    }
+    [HttpDelete("{userid}/{postid:int}")]
+
+    public async Task<ActionResult> DeleteLike(string userid, int postid)
+    {
+        var deleted = await _service.DeleteLikeAsync(userid, postid);
+
+        if (deleted is null)
+        {
+            return Conflict();
+        }
+
+        _logger.LogInformation("user {} has unliked post {}", userid, postid);
+
+        return NoContent();
     }
 
 }

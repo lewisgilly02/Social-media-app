@@ -67,6 +67,36 @@ public class PostsService
         };
     }
 
+    public async Task<LikeResponseDto?> CreateLikeAsync(int postId, string UserId)
+    {   
+        var postExists = await _db.Posts
+            .AnyAsync(p => p.Id == postId);
+
+        if (!postExists) return null;
+
+
+        var alreadyLiked = await _db.Likes
+            .AnyAsync(l => l.PostId == postId && l.UserId == UserId);
+        // when we expand error hadnling will have to give this the conflict error code 409
+        if (alreadyLiked) return null;
+
+        var liked = new Like()
+        {
+            PostId = postId,
+            UserId = UserId
+        };
+
+        _db.Likes.Add(liked);
+
+        await _db.SaveChangesAsync();
+
+        return new LikeResponseDto
+        {
+            PostId = postId,
+            UserId = UserId
+        };
+    }
+
 
     // first or default returns the first match or null
     public async Task<PostResponseDto?> GetPostByIdAsync(int id)
@@ -88,6 +118,7 @@ public class PostsService
             AuthorId = post.AuthorId,
             Content = post.Content,
             CreatedAt = post.CreatedAt,
+            LikeCount = await _db.Likes.CountAsync(l => l.PostId == post.Id),
             Comments = post.Comments.Select(c => new CommentResponseDto
             {
                 Id = c.Id,
@@ -114,7 +145,8 @@ public class PostsService
                 AuthorId = p.AuthorId,
                 Content = p.Content,
                 CreatedAt = p.CreatedAt,
-                Comments = new()
+                Comments = new(),
+                LikeCount = p.Likes.Count()
             }).ToListAsync();
 
             return posts;
@@ -123,7 +155,22 @@ public class PostsService
         
     }
    
-    public async Task<Post?> DeletePost(int id)
+
+
+ // TODO - change these to DTOs between now and this app's official deployment!
+    public async Task<Post?> EditPost(int id, String updatedContent)
+    {
+        var post = await _db.Posts.FindAsync(id);
+        if (post is null) return null;
+
+        post.Content = updatedContent;
+
+        await _db.SaveChangesAsync();
+
+        return post;
+    }
+
+    public async Task<Post?> DeletePostAsync(int id)
     {
         var post = await _db.Posts.FindAsync(id);
         if (post is null) return null;
@@ -135,18 +182,18 @@ public class PostsService
         return post;
     }
 
-
-
-    public async Task<Post?> EditPost(int id, String updatedContent)
+    public async Task<Like?> DeleteLikeAsync(string userId, int postId)
     {
-        var post = await _db.Posts.FindAsync(id);
-        if (post is null) return null;
-
-        post.Content = updatedContent;
+        var like = await _db.Likes
+            .FindAsync(userId, postId);
+        
+        if (like is null) return null;
+        
+        _db.Likes.Remove(like);
 
         await _db.SaveChangesAsync();
 
-        return post;
+        return like;
     }
 
     public void ThrowAnException()

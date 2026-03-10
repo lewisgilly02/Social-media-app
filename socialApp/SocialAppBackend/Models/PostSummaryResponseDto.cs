@@ -18,4 +18,8 @@ public class PostSummaryResponseDto
 
     public List<CommentResponseDto> Comments {get; set;} = new();
 
+
+
+    public int LikeCount {get; set;}
+
 }

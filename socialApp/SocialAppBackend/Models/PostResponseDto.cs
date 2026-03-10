@@ -8,7 +8,7 @@ public class PostResponseDto
     public int Id { get; set; }
 
     
-    public string AuthorId { get; set; } = string.Empty;
+    public string AuthorId { get; set; } = "";
 
 
     public string Content { get; set; } = string.Empty;
@@ -16,5 +16,7 @@ public class PostResponseDto
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public List<CommentResponseDto> Comments {get; set;} = new();
+
+    public int LikeCount {get; set;} 
 
 }
