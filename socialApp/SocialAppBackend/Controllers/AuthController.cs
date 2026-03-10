@@ -37,7 +37,11 @@ public class AuthController : ControllerBase
 
     public async Task<ActionResult<LoginResponseDto?>> Login([FromBody] LoginDto dto)
     {
-        
+        var loggedIn = await _service.LoginAsync(dto.UserName, dto.Password);
+
+        if (loggedIn is null) return Unauthorized();
+
+        return Ok(loggedIn);
     }
 
     // ================ GET / READ

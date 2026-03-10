@@ -26,7 +26,7 @@ public class AuthService
         if (existing is not null) return null;
 
         string hash = BCrypt.Net.BCrypt.HashPassword(password);
-        
+
         var user = new User
         {
 
@@ -44,5 +44,24 @@ public class AuthService
             UserName = user.UserName
 
         };
+    }
+
+
+
+    public async Task<LoginResponseDto?> LoginAsync(string username, string Incomingpassword)
+    {
+        var usernameExists = await _db.Users.FirstOrDefaultAsync(u => u.UserName == username);
+
+        if (usernameExists is null) return null;
+
+        bool passwordMatches = BCrypt.Net.BCrypt.Verify(Incomingpassword, usernameExists.PasswordHash);
+
+        if (!passwordMatches) return null;
+
+        return new LoginResponseDto
+        {
+            
+        }
+
     }
 }
