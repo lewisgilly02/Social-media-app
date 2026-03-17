@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialAppBackend.Models;
+using SocialAppBackend.Models.DTOs.Inbound;
+using SocialAppBackend.Models.DTOs.Outbound;
 using SocialAppBackend.Services;
 namespace SocialAppBackend.Controllers;
 

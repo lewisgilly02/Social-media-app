@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialAppBackend.Models;
+namespace SocialAppBackend.Models.DTOs.Outbound;
 
 /*
 *  when we return a comment w/o the dto, it will infinite recurse

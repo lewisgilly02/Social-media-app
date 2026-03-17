@@ -1,5 +1,7 @@
 using SocialAppBackend.Data;
 using SocialAppBackend.Models;
+using SocialAppBackend.Models.DTOs.Inbound;
+using SocialAppBackend.Models.DTOs.Outbound;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.VisualBasic;
@@ -17,10 +19,11 @@ public class PostsService
     }
 
 
-    public async Task<PostResponseDto> CreatePostAsync(string content)
+    public async Task<PostResponseDto> CreatePostAsync(string userId, string content)
     {
         var post = new Post
-        {
+        {   
+            AuthorId = userId,
             Content = content,
             CreatedAt = DateTime.UtcNow
         };
@@ -30,7 +33,8 @@ public class PostsService
         await _db.SaveChangesAsync();
 
         return new PostResponseDto
-        {
+        {   
+            AuthorId = userId,
             Id = post.Id,
             Content = post.Content,
             CreatedAt = post.CreatedAt,
@@ -39,7 +43,7 @@ public class PostsService
     }
 
 
-    public async Task<CreateCommentDto?> CreateCommentAsync(int postId, string authorId, string content)
+    public async Task<CreateCommentDto?> CreateCommentAsync(string authorId, int postId, string content)
     {   
 
         var postExists = await _db.Posts
@@ -61,13 +65,12 @@ public class PostsService
         
         return new CreateCommentDto
         {
-            AuthorId = comment.AuthorId,
-
+            PostId = comment.PostId,
             Content = comment.Content
         };
     }
 
-    public async Task<LikeResponseDto?> CreateLikeAsync(int postId, string UserId)
+    public async Task<LikeResponseDto?> CreateLikeAsync(string UserId, int postId)
     {   
         var postExists = await _db.Posts
             .AnyAsync(p => p.Id == postId);
@@ -196,8 +199,5 @@ public class PostsService
         return like;
     }
 
-    public void ThrowAnException()
-    {
-        throw new InvalidOperationException("Testing the global error handler - artificial error ");
-    }
+
 }

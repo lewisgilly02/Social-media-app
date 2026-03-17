@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("18299207-d1cf-49bb-8a96-e782767aedee")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("SocialAppBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+701a90e6ad156526da54e5e979a4fec4eed4ae0a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8f12fd405cd7d6424c7804b5bcc4111646efd34")]
 [assembly: System.Reflection.AssemblyProductAttribute("SocialAppBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SocialAppBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

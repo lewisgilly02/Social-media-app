@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+namespace SocialAppBackend.Models.DTOs.Inbound;
 public class EditPostDto
 {
     [Required]

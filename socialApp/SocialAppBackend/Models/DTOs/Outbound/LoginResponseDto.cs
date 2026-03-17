@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
-namespace SocialAppBackend.Models;
+namespace SocialAppBackend.Models.DTOs.Outbound;
 
 public class LoginResponseDto
 {

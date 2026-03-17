@@ -1,5 +1,8 @@
 using SocialAppBackend.Data;
 using SocialAppBackend.Models;
+using SocialAppBackend.Models.DTOs.Inbound;
+using SocialAppBackend.Models.DTOs.Outbound;
+
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using System.Security.Claims;
@@ -12,10 +15,13 @@ namespace SocialAppBackend.Services;
 public class AuthService
 {
     private readonly AppDbContext _db;
+    
+    private readonly IConfiguration _config;
 
-    public AuthService(AppDbContext db)
+    public AuthService(AppDbContext db, IConfiguration config)
     {
         _db = db;
+        _config = config;
     }
 
 
@@ -79,7 +85,7 @@ public class AuthService
 
         // convert secret key string into bytes, then wrap it in a security key object
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes("secretkeyforsecrecywonttellanybody123lookatmeheeheeheesecrecyyoucantseefeeforemekeykeykeylongenoughformeeee")
+            Encoding.UTF8.GetBytes(_config["Jwt:Key"]!)
         );
 
         // pair key with the algorithm to use it for signing
@@ -87,8 +93,8 @@ public class AuthService
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "SocialApp",
-            audience: "SocialApp",
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: credentials

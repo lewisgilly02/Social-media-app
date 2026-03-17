@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialAppBackend.Models;
+namespace SocialAppBackend.Models.DTOs.Outbound;
 
 // this is the dto fo returning a singular post - this will come with comments pre loaded.
 public class PostResponseDto

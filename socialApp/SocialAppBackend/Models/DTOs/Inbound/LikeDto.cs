@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialAppBackend.Models;
+namespace SocialAppBackend.Models.DTOs.Inbound;
 
 public class LikeDto
 {

@@ -187,3 +187,6 @@ C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBacke
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\lewis\Documents\coding\aspnet\Social-media-app\socialApp\SocialAppBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
