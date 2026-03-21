@@ -4,5 +4,6 @@ public enum ServiceError
 {
     NotFound,
     Forbidden,
-    Conflict
+    Conflict,
+    InvalidCredentials
 }

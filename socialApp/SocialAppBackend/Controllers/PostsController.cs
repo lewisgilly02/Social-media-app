@@ -35,7 +35,7 @@ public class PostsController : ControllerBase
     {
         _logger.LogInformation("post controller: client requested all posts: {}", Request.Path);
         var posts = await _service.GetAllAsync();
-        return Ok(posts);
+        return Ok(posts.Data);
     }
 
  

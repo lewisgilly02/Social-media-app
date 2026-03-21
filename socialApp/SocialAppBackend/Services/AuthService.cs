@@ -2,7 +2,7 @@ using SocialAppBackend.Data;
 using SocialAppBackend.Models;
 using SocialAppBackend.Models.DTOs.Inbound;
 using SocialAppBackend.Models.DTOs.Outbound;
-
+using SocialAppBackend.Common;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using System.Security.Claims;
@@ -56,20 +56,22 @@ public class AuthService
 
 
 
-    public async Task<LoginResponseDto?> LoginAsync(string username, string Incomingpassword)
+    public async Task<ServiceResult<LoginResponseDto>> LoginAsync(string username, string Incomingpassword)
     {
         var usernameExists = await _db.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
-        if (usernameExists is null) return null;
+        if (usernameExists is null) return new ServiceResult<LoginResponseDto>{Error = ServiceError.InvalidCredentials};
 
         bool passwordMatches = BCrypt.Net.BCrypt.Verify(Incomingpassword, usernameExists.PasswordHash);
 
-        if (!passwordMatches) return null;
+        if (!passwordMatches) return new ServiceResult<LoginResponseDto>{Error = ServiceError.InvalidCredentials};
 
-        return new LoginResponseDto
+        LoginResponseDto dto = new()
         {
             Token = GenerateToken(usernameExists)
         };
+
+        return new ServiceResult<LoginResponseDto>{Data = dto};
 
     }
 

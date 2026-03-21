@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SocialAppBackend.Common;
 using SocialAppBackend.Models;
 using SocialAppBackend.Models.DTOs.Inbound;
 using SocialAppBackend.Models.DTOs.Outbound;
@@ -41,9 +42,16 @@ public class AuthController : ControllerBase
     {
         var loggedIn = await _service.LoginAsync(dto.UserName, dto.Password);
 
-        if (loggedIn is null) return Unauthorized();
+        if (!loggedIn.Success)
+        {
+            return loggedIn.Error switch
+            {
+                ServiceError.InvalidCredentials => Unauthorized("invalid username and / or password"),
+                _ => StatusCode(500)
+            };
+        }
 
-        return Ok(loggedIn);
+        return Ok(loggedIn.Data);
     }
 
     // ================ GET / READ
