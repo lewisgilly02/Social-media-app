@@ -29,6 +29,8 @@ public class PostsService
             CreatedAt = DateTime.UtcNow
         };
 
+
+        // by the time userid is here, it is null but userid comes from jwt so its in service
         _db.Posts.Add(post);
 
         await _db.SaveChangesAsync();
@@ -68,7 +70,7 @@ public class PostsService
         
         CreateCommentDto dto = new()
         {
-            PostId = comment.PostId,
+            
             Content = comment.Content
         };
 

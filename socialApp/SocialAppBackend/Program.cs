@@ -43,6 +43,8 @@ builder.Services.AddAuthentication("Bearer")
                 Encoding.UTF8.GetBytes(jwtKey!)
             )
         };
+
+        Options.MapInboundClaims = false;
     });
 
 builder.Services.AddSwaggerGen(options =>

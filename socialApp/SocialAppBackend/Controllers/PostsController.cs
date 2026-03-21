@@ -96,6 +96,7 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<CreatePostDto>> CreatePost([FromBody] CreatePostDto dto)
     {   
         var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        _logger.LogWarning(" user id is {}", userId);
         // [authorize] guarantees a valid token exists so sub wont be null
         var created = await _service.CreatePostAsync(userId!, dto.Content);
 
