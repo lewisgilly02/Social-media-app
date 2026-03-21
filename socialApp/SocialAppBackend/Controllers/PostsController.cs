@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialAppBackend.Models;
+using SocialAppBackend.Common;
 using SocialAppBackend.Models.DTOs.Inbound;
 using SocialAppBackend.Models.DTOs.Outbound;
 using SocialAppBackend.Services;
@@ -37,7 +38,7 @@ public class PostsController : ControllerBase
         return Ok(posts);
     }
 
-    // change to dtos
+ 
 
     [HttpGet("{id:int}")]
     [AllowAnonymous]
@@ -45,8 +46,43 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<PostResponseDto>> GetById(int id)
     {
         var post = await _service.GetPostByIdAsync(id);
+
         _logger.LogInformation("post controller: client requested post id: {}, {}", id, Request.Path);
-        return post is null ? NotFound() : Ok(post);
+
+        if (!post.Success)
+        {
+            return post.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                _ => StatusCode(500)
+            };
+
+        }   
+            // if post.success is true, data cant be null
+            return post.Data!;
+    }
+
+    [HttpGet("{postid:int}/comments")]
+    [AllowAnonymous]
+    
+
+    public async Task<ActionResult<List<CommentResponseDto>>> GetComments(int postId)
+    {
+        // this will check in service that the post exists but will return only the comments
+        var comments = await _service.GetCommentsAsync(postId);
+
+        if (!comments.Success)
+        {
+            return comments.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                _ => StatusCode(500)
+            };
+        }
+
+        _logger.LogInformation("client is getting comments on post {}", postId);
+
+        return Ok(comments.Data);
     }
 
 
@@ -62,8 +98,10 @@ public class PostsController : ControllerBase
         var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
         // [authorize] guarantees a valid token exists so sub wont be null
         var created = await _service.CreatePostAsync(userId!, dto.Content);
+
         _logger.LogInformation("client created a post");
-        return Ok(created);
+
+        return Ok(created.Data);
     }
 
     [HttpPost("{postId:int}/comments")]
@@ -74,10 +112,17 @@ public class PostsController : ControllerBase
         var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
         var created = await _service.CreateCommentAsync(userId!, postId, dto.Content);
 
-        if (created is null) return NotFound();
+        if (!created.Success)
+        {
+            return created.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                _ => StatusCode(500)
+            };    
+        }
 
         _logger.LogInformation("client has made a comment on a post");
-        return Ok(created);
+        return Ok(created.Data);
     }
 
     [HttpPost("{postId:int}/likes")]
@@ -89,39 +134,68 @@ public class PostsController : ControllerBase
 
         var liked = await _service.CreateLikeAsync(userId!, postId);
 
-        if (liked is null) return NotFound();
+        if (!liked.Success)
+        {
+            return liked.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                ServiceError.Conflict => Conflict(),
+                _ => StatusCode(500)
+            };
+        }
 
         _logger.LogInformation("user {} just liked post {}", userId, postId);
 
-        return Ok(liked);
+        return Ok(liked.Data);
     }
 
 
     //==================================== UDPATE
-    [HttpPatch("{id:int}")]
+    [HttpPatch("{postid:int}")]
     [Authorize]
 
     public async Task<ActionResult<EditPostDto>> Edit(int postid, [FromBody] EditPostDto dto)
-    {
-        var updatedPost = await _service.EditPost(postid, dto.content);
+    {   
 
-        if (updatedPost is null) return NotFound();
+        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        
+        var updatedPost = await _service.EditPost(userId!, postid, dto.content);
+
+        if (!updatedPost.Success)
+        {
+            return updatedPost.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                ServiceError.Forbidden => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
 
         _logger.LogInformation("client edited post id: {}", postid);
 
-        return Ok(updatedPost);
+        return Ok(updatedPost.Data);
     }
 
     // ================================== DELETE
     [HttpDelete("{id:int}/posts")]
     [Authorize]
 
-    public async Task<ActionResult> DeletePost(int id)
+    public async Task<ActionResult> DeletePost(int postId)
     {   
+        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-        var deleted = await _service.DeletePostAsync(id);
-        if (deleted is null) return NotFound();
-        _logger.LogInformation("client deleted post: {}", id);
+        var deleted = await _service.DeletePostAsync(userId!, postId);
+
+        if (!deleted.Success)
+        {
+            return deleted.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                ServiceError.Forbidden => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+        _logger.LogInformation("client deleted post: {}", postId);
 
         return NoContent();
         
@@ -137,9 +211,13 @@ public class PostsController : ControllerBase
         
         var deleted = await _service.DeleteLikeAsync(userId!, postid);
 
-        if (deleted is null)
+        if (!deleted.Success)
         {
-            return Conflict();
+            return deleted.Error switch
+            {
+                ServiceError.NotFound => NotFound(),
+                _ => StatusCode(500)
+            };
         }
 
         _logger.LogInformation("user {} has unliked post {}", userId, postid);
